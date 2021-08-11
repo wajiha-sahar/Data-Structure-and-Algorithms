@@ -1,7 +1,6 @@
 # Data-Structure-and-Algorithms
 Heap Sort using C++
-In this project, heap sorting is done.In heap sort we have created a complete binary tree (ordered set of nodes where left children are less than or equal to 
-current node,which is less than all right nodes) because after creating it we can sort it. Initially on receiving an unsorted list, the first step in heap sort is 
+In this project, heap sorting is done.In heap sort created a complete binary tree (ordered set of nodes where left children are less than or equal to current node,which is less than all right nodes) because after creating it we can sort it. Initially on receiving an unsorted list, the first step in heap sort is 
 to create a Heap data structure (Max-Heap or Min-Heap). Once heap is built, the first element of the Heap is either largest or smallest (depending upon Max-Heap 
 or Min-Heap). If the heap is min then the first element will be smallest and in max the first element is the largest element. Since the tree satisfies Max-Heap 
 property, then the largest item is stored at the root node. 

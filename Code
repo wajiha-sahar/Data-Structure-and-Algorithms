@@ -1,0 +1,415 @@
+#include <iostream>
+using namespace std;
+class Tree
+{
+private:
+  struct Node
+  {
+    int data;
+    Node* left = NULL;
+    Node* right = NULL;
+  };
+public:
+  Tree();
+  Node* root;
+  bool isEmpty();
+  void BinarySearchTree(int);
+  void Heap(int*, int);
+  void inorderTraversal(Node*);
+  void preorderTraversal(Node*);
+  void postorderTraversal(Node*);
+  void minHeap(int*, int);
+  void maxHeap(int*, int);
+  int get_leftchild_indx(int x);
+  int get_rightchild_indx(int x);
+  int get_parent_indx(int x);
+  void swap_left(int*, int);
+  void swap_up(int*, int);
+  void swap(int*, int, int);
+  bool isleafnode(int x, int size);
+  void minheapify(int*, int, int);
+  void maxheapify(int*, int, int);
+};
+Tree::Tree()
+{
+  root = NULL;
+}
+bool Tree::isEmpty()
+{
+  if (root == NULL)
+    return true;
+ 
+  else
+    return false;
+}
+int Tree::get_leftchild_indx(int x)
+{
+  return ((2 * x) + 1);
+}
+int Tree::get_rightchild_indx(int x)
+{
+  return ((2 * x) + 2);
+}
+int Tree::get_parent_indx(int x)
+{
+  return ((x - 1) / 2);
+}
+bool Tree::isleafnode(int x, int size)
+{
+  if ((((2 * x) + 1) == 0 || ((2 * x) + 1) >= size) && (((2 * x) + 2) == 0 || (((2 * x) + 2) >= size)))
+    return true;
+ 
+  else
+    return false;
+}
+ 
+void Tree::swap_left(int* ar, int i)
+{
+  int temp_child = ar[get_leftchild_indx(i)];
+  ar[get_leftchild_indx(i)] = ar[get_rightchild_indx(i)];
+  ar[get_rightchild_indx(i)] = temp_child;
+}
+void Tree::swap_up(int* ar, int i)
+{
+  int temp_child = ar[get_parent_indx(i)];
+  ar[get_parent_indx(i)] = ar[get_leftchild_indx(i)];
+  ar[get_leftchild_indx(i)] = temp_child;
+ 
+}
+void Tree::swap(int* ar, int i, int j)
+{
+  int temp_child = ar[j];
+  ar[j] = ar[i];
+  ar[i] = temp_child;
+}
+void Tree:: minheapify(int* ar, int i, int size)
+{
+  int leftChildIndex = get_leftchild_indx(i);
+  int rightChildIndex = get_rightchild_indx(i);
+ 
+  int smallestIndex = i;
+ 
+  if (leftChildIndex < size && ar[leftChildIndex] < ar[smallestIndex]) {
+    smallestIndex = leftChildIndex;
+  }
+ 
+  if (rightChildIndex < size && ar[rightChildIndex] < ar[smallestIndex]) {
+    smallestIndex = rightChildIndex;
+  }
+ 
+  if (smallestIndex != i) {
+    this->swap(ar, smallestIndex, i);
+    this->minheapify(ar, smallestIndex, size);
+  }
+}
+void Tree:: maxheapify(int* ar, int i, int size)
+{
+  int leftChildIndex = get_leftchild_indx(i);
+  int rightChildIndex = get_rightchild_indx(i);
+ 
+  int largestIndex = i;
+ 
+  if (leftChildIndex < size && ar[leftChildIndex] > ar[largestIndex]) {
+    largestIndex = leftChildIndex;
+  }
+ 
+  if (rightChildIndex < size && ar[rightChildIndex] > ar[largestIndex]) {
+    largestIndex = rightChildIndex;
+  }
+ 
+  if (largestIndex != i) {
+    this->swap(ar, largestIndex, i);
+    this->maxheapify(ar, largestIndex, size);
+  }
+}
+void Tree::minHeap(int* ar, int size)
+{
+  for (int i = size-1; i > 0; i--)
+  {
+    if (!isleafnode(i, size) && (((2 * i) + 2) > 0 && (((2 * i) + 2) < size)))
+    {
+      if (ar[get_leftchild_indx(i)] > ar[get_rightchild_indx(i)])
+      {
+        this->swap_left(ar, i);
+      }
+    }
+      if (!isleafnode(i, size))
+    { 
+      if (ar[get_leftchild_indx(i)] < ar[i])
+      {
+        this->swap_up(ar, i);
+      }
+    }
+  }
+}
+void Tree :: maxHeap(int *ar, int size)
+{
+  for(int i =size-1; i>=0; i--) 
+  {
+    if(!isleafnode(i,size) &&  (((2*i)+2) > 0 && (((2*i)+2) < size) ) )
+    {
+      if(ar[get_leftchild_indx(i)] < ar[get_rightchild_indx(i)])
+      {
+        this->swap_left(ar,i);
+      }
+    }
+    if(!isleafnode(i,size))
+    {
+    if(ar[get_leftchild_indx(i)] > ar[i])
+    {
+     this->swap_up(ar, i);
+    }
+    }
+  }
+}
+void Tree::BinarySearchTree(int data)
+{
+  Node* n = new Node;
+  n->data = data;
+  if (isEmpty())
+  {
+    root = n;
+  }
+  else if (!isEmpty())
+  {
+    Node* temp = root;
+  check:
+    if (data >= temp->data)
+    {
+      if (temp->right == NULL)
+      {
+        temp->right = n;
+      }
+      else
+      {
+        temp = temp->right;
+        goto check;
+      }
+    }
+    else
+    {
+      if (temp->left == NULL)
+      {
+        temp->left = n;
+      }
+      else
+      {
+        temp = temp->left;
+        goto check;
+      }
+    }
+  }
+}
+void Tree::Heap(int* arr, int size)
+{ cout << endl;
+  cout << "Root Node is:  " << arr[0] << endl << endl;
+  for (int i = 0; i < size; i++)
+  {
+    if (get_leftchild_indx(i) != 0 && get_leftchild_indx(i) < size)
+      cout << "Left Child of " << arr[i] << " is " << arr[get_leftchild_indx(i)] << endl;
+ 
+    else if (isleafnode(i, size))
+      cout << arr[i] << " is a leaf Node" << endl;
+ 
+    else
+      cout << arr[i] << " has no left child" << endl;
+ 
+    if (get_rightchild_indx(i) != 0 && get_rightchild_indx(i) < size)
+      cout << "Right Child of " << arr[i] << " is " << arr[get_rightchild_indx(i)] << endl;
+ 
+    else if (!isleafnode(i, size))
+      cout << arr[i] << " has no right child" << endl;
+ 
+    if (i != 0)
+      cout << "Parent of " << arr[i] << " is " << arr[get_parent_indx(i)] << endl;
+    cout << endl << endl;
+  }
+}
+ 
+void Tree::inorderTraversal(Node* root)
+{
+  if (root->left != NULL)
+  {
+    this->inorderTraversal(root->left);
+  }
+ 
+  cout << root->data << endl;
+ 
+  if (root->right != NULL)
+  {
+    this->inorderTraversal(root->right);
+  }
+}
+ 
+void Tree::preorderTraversal(Node* root)
+{
+  //(Root, Left, Right) 
+  if (root == NULL)
+  {
+    return;
+  }
+  cout << root->data << endl;
+  preorderTraversal(root->left);
+  preorderTraversal(root->right);
+}
+ 
+void Tree::postorderTraversal(Node* root)
+{
+  //(Left, Right, Root)
+  if (isEmpty())
+  {
+    cout << "Empty";
+    return;
+  }
+  if (root->left != NULL)
+  {
+    this->postorderTraversal(root->left);
+  }
+  if (root->right != NULL)
+  {
+    this->postorderTraversal(root->right);
+  }
+  cout << root->data << endl;
+}
+ 
+int main()
+{
+  Tree tree;
+  int* t;
+  int n;
+  cout << "***************Create the Heap****************" << endl;
+  cout << "How many numbers you want to insert: ";
+  cin >> n;
+  t = new int[n];
+  for (int i = 0; i < n; i++)
+  {
+    cout << "Enter Number: ";
+    cin >> t[i];
+  }
+  for (int i = 0; i < n; i++)
+  {
+    tree.BinarySearchTree(t[i]);
+  }
+  cout<<"------------Inorder Traversal---------"<<endl;
+  tree.inorderTraversal(tree.root);
+  cout<<endl;
+  cout<<"------------Preorder Traversal---------"<<endl;
+  tree.preorderTraversal(tree.root);
+  cout<<endl;
+  cout<<"------------Postorder Traversal---------"<<endl;
+  tree.postorderTraversal(tree.root);
+  cout << "***************Heap****************" << endl;
+  tree.Heap(t, n);
+  cout<<"------------Min Heap---------"<<endl;
+  for (int i=n/2-1; i>=0; i--) 
+  {
+    tree.minheapify(t,i, n);
+  }
+  tree.Heap(t, n);
+  cout<<"------------Max Heap---------"<<endl;
+  for (int i=n/2-1; i>=0; i--) 
+  {
+    tree.maxheapify(t,i, n);
+  }
+  tree.Heap(t, n);
+  int ans;
+  char a;
+  
+ 
+  again:
+  cout << "------------Choose the option from 1-3---------------" << endl;
+  cout << "1. Insert in the Heap" << endl;
+  cout << "2. Delete from the Heap" << endl;
+  cout << "3. Heap Sort Decending"<<endl;
+  cout << "4. Heap Sort Ascending"<<endl;
+  cin >> ans;
+  switch (ans)
+  {
+  case 1:
+    int* temp;
+    n++;
+    temp = new int[n];
+    for (int i = 0; i < n - 1; i++)
+      temp[i] = t[i];
+ 
+    cout << "Enter Data you want to insert: ";
+    cin >> temp[n - 1];
+ 
+    cout << "Heap After Insertion: ";
+    tree.Heap(temp, n);
+ 
+    cout<<"------------Min Heap---------"<<endl;;
+    for (int i=n/2-1; i>=0; i--) 
+    {
+      tree.minheapify(temp,i,n);
+    }
+    tree.Heap(temp, n);
+ 
+    cout<<"------------Max Heap---------"<<endl;
+    for (int i=n/2-1; i>=0; i--) 
+    {
+      tree.maxheapify(temp,i,n);
+    }
+    tree.Heap(temp, n);
+    break;
+ 
+  case 2:
+    cout << "Heap After Deletion: "<< endl;
+    t[0] = t[n - 1];
+    n--;
+    tree.Heap(t, n);
+ 
+    cout<< "Min Heap";
+    for (int i=n/2-1; i>=0; i--) 
+    {
+      tree.minheapify(t,i,n);
+    }
+    tree.Heap(t, n);
+    cout<< "Max Heap";
+    for (int i=n/2-1; i>=0; i--) 
+    {
+      tree.maxheapify(t,i,n);
+    }
+    tree.Heap(t, n);
+    break;
+ 
+    case 3:
+    cout<<"Heap Sort Descending Data: \n";
+    while(n>0)
+    {
+      int i = 0;
+      cout<<t[0]<<'\t';
+      t[0] = t[n-1];
+      n--;
+      tree.maxheapify(t,0,n);
+    }
+    break;
+ 
+    case 4:
+    cout<<"Heap Sort Ascending Data: \n";
+    for (int i=n/2-1; i>=0; i--) 
+    {
+    tree.minheapify(t,i, n);
+    }
+    while(n>0)
+    {
+      int i = 0;
+      cout<<t[0]<<'\t';
+      t[0] = t[n-1];
+      n--;
+      tree.minheapify(t,0,n);
+    }
+    break;
+ 
+    default:
+    cout << " Wrong choice, Select Again" << endl;
+    goto again;
+  }
+   
+  
+  for (int i = 0; i < 7; i++)
+  {
+    tree.BinarySearchTree(t[i]);
+  }
+ 
+  return 0;}
